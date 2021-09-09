@@ -1,15 +1,8 @@
 package com.kuzmin.bookshop.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import java.util.*;
+import javax.persistence.*;
 
 @Entity
 public class Author implements Serializable {
@@ -24,18 +17,21 @@ public class Author implements Serializable {
     private String genre;
     private int age;
 
-    @OneToMany(cascade = CascadeType.ALL,
-            mappedBy = "author", orphanRemoval = true)
-    private List<Book> books = new ArrayList<>();
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(name = "author_book",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    private Set<Book> books = new HashSet<>();
 
     public void addBook(Book book) {
         this.books.add(book);
-        book.setAuthor(this);
+        book.getAuthors().add(this);
     }
 
     public void removeBook(Book book) {
-        book.setAuthor(null);
         this.books.remove(book);
+        book.getAuthors().remove(this);
     }
 
     public void removeBooks() {
@@ -44,7 +40,7 @@ public class Author implements Serializable {
         while (iterator.hasNext()) {
             Book book = iterator.next();
 
-            book.setAuthor(null);
+            book.getAuthors().remove(this);
             iterator.remove();
         }
     }
@@ -81,11 +77,11 @@ public class Author implements Serializable {
         this.age = age;
     }
 
-    public List<Book> getBooks() {
+    public Set<Book> getBooks() {
         return books;
     }
 
-    public void setBooks(List<Book> books) {
+    public void setBooks(Set<Book> books) {
         this.books = books;
     }
 

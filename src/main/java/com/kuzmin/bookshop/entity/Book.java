@@ -1,13 +1,10 @@
 package com.kuzmin.bookshop.entity;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import javax.persistence.*;
 
 @Entity
 public class Book implements Serializable {
@@ -21,9 +18,9 @@ public class Book implements Serializable {
     private String title;
     private String isbn;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_id")
-    private Author author;
+    @ManyToMany(mappedBy = "books")
+    @OrderBy("name DESC")
+    private Set<Author> authors = new LinkedHashSet<>();
 
     public Long getId() {
         return id;
@@ -49,12 +46,12 @@ public class Book implements Serializable {
         this.isbn = isbn;
     }
 
-    public Author getAuthor() {
-        return author;
+    public Set<Author> getAuthors() {
+        return authors;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
+    public void setAuthors(Set<Author> author) {
+        this.authors = author;
     }
 
     @Override
