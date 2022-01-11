@@ -3,18 +3,24 @@ package com.kuzmin.bookshop.service;
 import com.kuzmin.bookshop.entity.Author;
 import com.kuzmin.bookshop.entity.Book;
 import com.kuzmin.bookshop.repository.AuthorRepository;
+import com.kuzmin.bookshop.repository.BookRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class BookstoreService {
 
     private final AuthorRepository authorRepository;
+    private final BookRepository bookRepository;
 
-    public BookstoreService(AuthorRepository authorRepository) {
+    public BookstoreService(AuthorRepository authorRepository, BookRepository bookRepository) {
 
         this.authorRepository = authorRepository;
+        this.bookRepository = bookRepository;
         insertAuthorWithBooks();
+        getAll();
     }
 
     @Transactional
@@ -49,5 +55,9 @@ public class BookstoreService {
         author.addBook(book); // use addBook() helper
 
         authorRepository.save(author);
+    }
+
+    List<Book> getAll() {
+        return bookRepository.findAll();
     }
 }

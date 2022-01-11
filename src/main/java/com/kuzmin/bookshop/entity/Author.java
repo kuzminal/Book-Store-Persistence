@@ -5,6 +5,12 @@ import java.util.*;
 import javax.persistence.*;
 
 @Entity
+@NamedEntityGraph(
+        name = "author-books-graph",
+        attributeNodes = {
+                @NamedAttributeNode("books")
+        }
+)
 public class Author implements Serializable {
 
     private static final long serialVersionUID = 1L;

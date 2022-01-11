@@ -1,7 +1,6 @@
 package com.kuzmin.bookshop.entity;
 
 import java.io.Serializable;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.*;
