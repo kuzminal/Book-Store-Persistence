@@ -15,18 +15,18 @@ import java.util.List;
 public interface AuthorRepository extends JpaRepository<Author, Long>, JpaSpecificationExecutor<Author> {
 
     @Override
-    @EntityGraph(value = "author-books-graph",
+    @EntityGraph(attributePaths = {"books.publisher"},
             type = EntityGraph.EntityGraphType.FETCH)
     List<Author> findAll();
 
-    @EntityGraph(value = "author-books-graph",
+    @EntityGraph(value = "author-books-publisher-graph",
             type = EntityGraph.EntityGraphType.FETCH)
     List<Author> findByAgeLessThanOrderByNameDesc(int age);
 
     @Query("SELECT a FROM Author a JOIN FETCH a.books WHERE a.name = ?1")
     Author fetchByName(String name);
 
-    @EntityGraph(value = "author-books-graph",
+    @EntityGraph(value = "author-books-publisher-graph",
             type = EntityGraph.EntityGraphType.FETCH)
     @Query(value="SELECT a FROM Author a WHERE a.age > 20 AND a.age < 40")
     List<Author> fetchAllAgeBetween20And40();

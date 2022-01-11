@@ -13,6 +13,7 @@ public class AuthorService {
 
     public AuthorService(AuthorRepository authorRepository) {
         this.authorRepository = authorRepository;
+        getAll();
     }
 
     public List<Author> getAll() {

@@ -6,9 +6,17 @@ import javax.persistence.*;
 
 @Entity
 @NamedEntityGraph(
-        name = "author-books-graph",
+        name = "author-books-publisher-graph",
         attributeNodes = {
-                @NamedAttributeNode("books")
+                @NamedAttributeNode(value = "books", subgraph = "publisher-subgraph")
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "publisher-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode("publisher")
+                        }
+                )
         }
 )
 public class Author implements Serializable {

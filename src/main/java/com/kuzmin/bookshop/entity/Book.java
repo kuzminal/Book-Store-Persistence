@@ -2,6 +2,7 @@ package com.kuzmin.bookshop.entity;
 
 import java.io.Serializable;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.*;
 
@@ -20,6 +21,10 @@ public class Book implements Serializable {
     @ManyToMany(mappedBy = "books")
     @OrderBy("name DESC")
     private Set<Author> authors = new LinkedHashSet<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "publisher_id")
+    private Publisher publisher;
 
     public Long getId() {
         return id;
@@ -53,21 +58,40 @@ public class Book implements Serializable {
         this.authors = author;
     }
 
+    public Publisher getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(Publisher publisher) {
+        if (Objects.equals(publisher, this.publisher)) {
+            return;
+        }
+        Publisher oldOwner = this.publisher;
+        this.publisher = publisher;
+        //remove from the old owner
+        if (oldOwner!=null)
+            oldOwner.removeBook(this);
+        //set myself into new owner
+        if (publisher!=null)
+            publisher.addBook(this);
+        this.publisher = publisher;
+    }
+
     @Override
-    public boolean equals(Object obj) {           
-        
+    public boolean equals(Object obj) {
+
         if (this == obj) {
             return true;
         }
-        
+
         if (obj == null) {
             return false;
         }
-        
+
         if (getClass() != obj.getClass()) {
             return false;
         }
-        
+
         return id != null && id.equals(((Book) obj).id);
     }
 
@@ -80,5 +104,4 @@ public class Book implements Serializable {
     public String toString() {
         return "Book{" + "id=" + id + ", title=" + title + ", isbn=" + isbn + '}';
     }
-    
 }
