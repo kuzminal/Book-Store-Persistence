@@ -13,7 +13,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface PublisherRepository extends JpaRepository<Publisher, Long> {
     @Override
-    @EntityGraph(attributePaths = {"books.authors"},
+    @EntityGraph(attributePaths = {"books.author"},
             type = EntityGraph.EntityGraphType.FETCH)
     List<Publisher> findAll();
 

@@ -1,24 +1,12 @@
 package com.kuzmin.bookshop.entity;
 
+import org.hibernate.annotations.Where;
+
 import java.io.Serializable;
 import java.util.*;
 import javax.persistence.*;
 
 @Entity
-@NamedEntityGraph(
-        name = "author-books-publisher-graph",
-        attributeNodes = {
-                @NamedAttributeNode(value = "books", subgraph = "publisher-subgraph")
-        },
-        subgraphs = {
-                @NamedSubgraph(
-                        name = "publisher-subgraph",
-                        attributeNodes = {
-                                @NamedAttributeNode("publisher")
-                        }
-                )
-        }
-)
 public class Author implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -31,32 +19,34 @@ public class Author implements Serializable {
     private String genre;
     private int age;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "author_book",
-            joinColumns = @JoinColumn(name = "author_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id")
-    )
-    private Set<Book> books = new HashSet<>();
+    @OneToMany(cascade = CascadeType.ALL,
+            mappedBy = "author", orphanRemoval = true)
+    private List<Book> books = new ArrayList<>();
 
-    public void addBook(Book book) {
-        this.books.add(book);
-        book.getAuthors().add(this);
+    @OneToMany(cascade = CascadeType.ALL,
+            mappedBy = "author", orphanRemoval = true)
+    @Where(clause = "price <= 20")
+    private List<Book> cheapBooks = new ArrayList<>();
+
+    @OneToMany(cascade = CascadeType.ALL,
+            mappedBy = "author", orphanRemoval = true)
+    @Where(clause = "price > 20")
+    private List<Book> restOfBooks = new ArrayList<>();
+
+    public List<Book> getCheapBooks() {
+        return cheapBooks;
     }
 
-    public void removeBook(Book book) {
-        this.books.remove(book);
-        book.getAuthors().remove(this);
+    public void setCheapBooks(List<Book> cheapBooks) {
+        this.cheapBooks = cheapBooks;
     }
 
-    public void removeBooks() {
-        Iterator<Book> iterator = this.books.iterator();
+    public List<Book> getRestOfBooks() {
+        return restOfBooks;
+    }
 
-        while (iterator.hasNext()) {
-            Book book = iterator.next();
-
-            book.getAuthors().remove(this);
-            iterator.remove();
-        }
+    public void setRestOfBooks(List<Book> restOfBooks) {
+        this.restOfBooks = restOfBooks;
     }
 
     public Long getId() {
@@ -91,11 +81,11 @@ public class Author implements Serializable {
         this.age = age;
     }
 
-    public Set<Book> getBooks() {
+    public List<Book> getBooks() {
         return books;
     }
 
-    public void setBooks(Set<Book> books) {
+    public void setBooks(List<Book> books) {
         this.books = books;
     }
 
