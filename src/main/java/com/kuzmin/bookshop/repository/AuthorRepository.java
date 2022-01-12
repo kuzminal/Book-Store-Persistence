@@ -19,15 +19,14 @@ public interface AuthorRepository extends JpaRepository<Author, Long>, JpaSpecif
             type = EntityGraph.EntityGraphType.FETCH)
     List<Author> findAll();
 
-    @EntityGraph(value = "author-books-publisher-graph",
-            type = EntityGraph.EntityGraphType.FETCH)
-    List<Author> findByAgeLessThanOrderByNameDesc(int age);
-
     @Query("SELECT a FROM Author a JOIN FETCH a.books WHERE a.name = ?1")
     Author fetchByName(String name);
 
-    @EntityGraph(value = "author-books-publisher-graph",
+    @EntityGraph(value = "author-books-graph",
             type = EntityGraph.EntityGraphType.FETCH)
-    @Query(value="SELECT a FROM Author a WHERE a.age > 20 AND a.age < 40")
-    List<Author> fetchAllAgeBetween20And40();
+    List<Author> findByAgeGreaterThanAndGenre(int age, String genre);
+
+    @EntityGraph(value = "author-books-graph",
+            type = EntityGraph.EntityGraphType.LOAD)
+    List<Author> findByGenreAndAgeGreaterThan(String genre, int age);
 }

@@ -6,17 +6,10 @@ import javax.persistence.*;
 
 @Entity
 @NamedEntityGraph(
-        name = "author-books-publisher-graph",
+        name = "author-books-graph",
         attributeNodes = {
-                @NamedAttributeNode(value = "books", subgraph = "publisher-subgraph")
-        },
-        subgraphs = {
-                @NamedSubgraph(
-                        name = "publisher-subgraph",
-                        attributeNodes = {
-                                @NamedAttributeNode("publisher")
-                        }
-                )
+                @NamedAttributeNode("name"),
+                @NamedAttributeNode("books")
         }
 )
 public class Author implements Serializable {
@@ -28,7 +21,9 @@ public class Author implements Serializable {
     private Long id;
 
     private String name;
+    @Basic(fetch = FetchType.LAZY)
     private String genre;
+    @Basic(fetch = FetchType.LAZY)
     private int age;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
