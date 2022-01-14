@@ -1,6 +1,6 @@
 Delete from bookstore.author_book;
-Delete from bookstore.author;
 Delete from bookstore.book;
+Delete from bookstore.author;
 Delete from bookstore.publisher;
 
 
