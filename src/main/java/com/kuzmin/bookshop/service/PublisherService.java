@@ -13,7 +13,6 @@ public class PublisherService {
 
     public PublisherService(PublisherRepository publisherRepository) {
         this.publisherRepository = publisherRepository;
-        getAll();
     }
 
     List<Publisher> getAll() {

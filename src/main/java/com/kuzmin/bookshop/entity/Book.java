@@ -1,9 +1,7 @@
 package com.kuzmin.bookshop.entity;
 
 import java.io.Serializable;
-import java.util.LinkedHashSet;
 import java.util.Objects;
-import java.util.Set;
 import javax.persistence.*;
 
 @Entity
@@ -12,15 +10,16 @@ public class Book implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String title;
     private String isbn;
 
-    @ManyToMany(mappedBy = "books")
+    @MapsId
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
     @OrderBy("name DESC")
-    private Set<Author> authors = new LinkedHashSet<>();
+    private Author author;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "publisher_id")
@@ -50,12 +49,12 @@ public class Book implements Serializable {
         this.isbn = isbn;
     }
 
-    public Set<Author> getAuthors() {
-        return authors;
+    public Author getAuthor() {
+        return author;
     }
 
-    public void setAuthors(Set<Author> author) {
-        this.authors = author;
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
     public Publisher getPublisher() {
