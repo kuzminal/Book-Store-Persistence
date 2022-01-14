@@ -16,7 +16,7 @@ public class PublisherService {
         getAll();
     }
 
-    List<Publisher> getAll() {
+    public List<Publisher> getAll() {
         return publisherRepository.findAll();
     }
 }
