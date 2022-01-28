@@ -1,5 +1,6 @@
 package com.kuzmin.bookshop.repository;
 
+import com.kuzmin.bookshop.dto.AuthorDTO;
 import com.kuzmin.bookshop.entity.Author;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,8 +24,11 @@ public interface AuthorRepository extends JpaRepository<Author, Long>, JpaSpecif
             type = EntityGraph.EntityGraphType.FETCH)
     List<Author> findByAgeLessThanOrderByNameDesc(int age);
 
+    @Query("SELECT new com.kuzmin.bookshop.dto.AuthorDTO(a.id, a.name, a.genre, a.age) FROM Author a WHERE a.name = ?1")
+    AuthorDTO fetchByNameWithoutBooks(String name);
+
     @Query("SELECT a FROM Author a JOIN FETCH a.books WHERE a.name = ?1")
-    Author fetchByName(String name);
+    Author fetchByNameWithBooks(String name);
 
     @EntityGraph(value = "author-books-publisher-graph",
             type = EntityGraph.EntityGraphType.FETCH)

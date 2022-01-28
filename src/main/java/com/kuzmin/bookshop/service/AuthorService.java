@@ -1,5 +1,6 @@
 package com.kuzmin.bookshop.service;
 
+import com.kuzmin.bookshop.dto.AuthorDTO;
 import com.kuzmin.bookshop.entity.Author;
 import com.kuzmin.bookshop.repository.AuthorRepository;
 import com.kuzmin.bookshop.repository.AuthorSpecs;
@@ -18,5 +19,9 @@ public class AuthorService {
 
     public List<Author> getAll() {
         return authorRepository.findAll(AuthorSpecs.isAgeGt45());
+    }
+
+    public AuthorDTO getByName(String name) {
+        return authorRepository.fetchByNameWithoutBooks(name);
     }
 }

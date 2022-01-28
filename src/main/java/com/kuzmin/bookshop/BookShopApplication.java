@@ -31,6 +31,8 @@ public class BookShopApplication {
             bookstoreService.getAll();
             System.out.println("\nFind all authors  ...");
             authorService.getAll();
+            System.out.println("\nFind author by name  ...");
+            authorService.getByName("Joana Nimar");
             System.out.println("\nFind all publishers  ...");
             publisherService.getAll();
         };
